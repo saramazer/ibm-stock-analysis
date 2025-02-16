@@ -133,7 +133,7 @@ def update_line_chart(state):
         plot_data = state["filtered_data"].copy()
         
         # Convert close prices from string back to float
-        plot_data["close"] = plot_data["close"].astype(float)
+        plot_data["Close"] = plot_data["Close"].astype(float)
         
         # Convert dates and sort chronologically
         plot_data["Date"] = pd.to_datetime(plot_data["Date"])
@@ -145,9 +145,9 @@ def update_line_chart(state):
         fig = px.line(
             plot_data, 
             x="Date",
-            y="close",
+            y="Close",
             title="Stock Prices Over Time",
-            labels={"Date": "Date", "close": "Close Price"}
+            labels={"Date": "Date", "Close": "Close Price"}
         )
         
         # Update layout for better visualization
@@ -194,7 +194,8 @@ def display_all_data(state):
         
         # Update filtered_data with all rows, sorted by Date (descending)
         state["filtered_data"] = df.reset_index(drop=True)
-        
+        state["filtered_data"].columns = state["filtered_data"].columns.str.capitalize()
+
         # Update filter mode and refresh line chart
         state["filter_mode"] = "all"
         update_line_chart(state)
@@ -209,14 +210,11 @@ def display_last_seven_days(state):
             state["filtered_data"] = None
             return
         
-        # Filter rows for the last 7 days based on "timestamp"
-        today = datetime.datetime.now()
-        seven_days_ago = today - datetime.timedelta(days=7)
-        
-        filtered_data = state["stock_data"][state["stock_data"]["timestamp"] >= seven_days_ago].copy()
+        # Get the last 7 records instead of filtering by date
+        filtered_data = state["stock_data"].copy().tail(7)  # Select the last 7 rows
         
         if filtered_data.empty:
-            print("No data available for the last 7 days.")
+            print("No data available for the last 7 records.")
             return
         
         # Sort by "timestamp" (datetime) in descending order before formatting for display
@@ -233,11 +231,12 @@ def display_last_seven_days(state):
         # Drop the original "timestamp" column if not needed for display
         filtered_data = filtered_data.drop(columns=["timestamp"])
         
-        # Update filtered_data with rows from the last 7 days, sorted by Date (descending)
+        # Capitalize all column names
         state["filtered_data"] = filtered_data.reset_index(drop=True)
-        
+        state["filtered_data"].columns = state["filtered_data"].columns.str.capitalize()
+
         # Update filter mode and refresh line chart
-        state["filter_mode"] = "last_seven_days"
+        state["filter_mode"] = "last_seven_records"
         update_line_chart(state)
     except Exception as e:
         print(f"Error displaying last 7 entries: {str(e)}")

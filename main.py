@@ -174,25 +174,29 @@ def display_all_data(state):
             state["show_dataframe"] = False
             state["filtered_data"] = None
             return
-        
+
         # Create a copy of stock_data for display purposes
         df = state["stock_data"].copy()
-        
+
         # Sort by "timestamp" (datetime) in descending order before formatting for display
         df = df.sort_values(by="timestamp", ascending=False).reset_index(drop=True)
-        
+
         # Format numeric columns to two decimal places
         numeric_columns = ["open", "high", "low", "close", "volume"]
         for col in numeric_columns:
             df[col] = df[col].apply(lambda x: f"{float(x):.2f}")
-        
+
         # Add a "Date" column formatted as MM/DD/YYYY for display purposes
         df["Date"] = df["timestamp"].dt.strftime("%m/%d/%Y")
-        
+
         # Drop the original "timestamp" column if not needed for display
         df = df.drop(columns=["timestamp"])
-        
-        # Update filtered_data with all rows, sorted by Date (descending)
+
+        # Move the "Date" column to the first position
+        columns_order = ["Date"] + [col for col in df.columns if col != "Date"]
+        df = df[columns_order]
+
+        # Capitalize all column names
         state["filtered_data"] = df.reset_index(drop=True)
         state["filtered_data"].columns = state["filtered_data"].columns.str.capitalize()
 
@@ -230,7 +234,11 @@ def display_last_seven_days(state):
         
         # Drop the original "timestamp" column if not needed for display
         filtered_data = filtered_data.drop(columns=["timestamp"])
-        
+
+        # Move the "Date" column to the first position
+        columns_order = ["Date"] + [col for col in filtered_data.columns if col != "Date"]
+        filtered_data = filtered_data[columns_order]
+
         # Capitalize all column names
         state["filtered_data"] = filtered_data.reset_index(drop=True)
         state["filtered_data"].columns = state["filtered_data"].columns.str.capitalize()

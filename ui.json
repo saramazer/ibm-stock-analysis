@@ -1,0 +1,248 @@
+{
+    "metadata": {
+        "writer_version": "0.7.5"
+    },
+    "components": {
+        "root": {
+            "id": "root",
+            "type": "root",
+            "content": {
+                "appName": "AI Starter"
+            },
+            "isCodeManaged": false,
+            "position": 0,
+            "handlers": {},
+            "visible": {
+                "expression": true,
+                "binding": "",
+                "reversed": false
+            }
+        },
+        "c0f99a9e-5004-4e75-a6c6-36f17490b134": {
+            "id": "c0f99a9e-5004-4e75-a6c6-36f17490b134",
+            "type": "page",
+            "content": {
+                "pageMode": "compact"
+            },
+            "isCodeManaged": false,
+            "position": 0,
+            "parentId": "root",
+            "handlers": {},
+            "visible": {
+                "expression": true,
+                "binding": "",
+                "reversed": false
+            }
+        },
+        "bebc5fe9-63a7-46a7-b0fa-62303555cfaf": {
+            "id": "bebc5fe9-63a7-46a7-b0fa-62303555cfaf",
+            "type": "header",
+            "content": {
+                "text": "@{my_app.title}",
+                "primaryTextColor": "#5551ff"
+            },
+            "isCodeManaged": false,
+            "position": 0,
+            "parentId": "c0f99a9e-5004-4e75-a6c6-36f17490b134",
+            "handlers": {},
+            "visible": {
+                "expression": true,
+                "binding": "",
+                "reversed": false
+            }
+        },
+        "ejpasds0o8qyjs1n": {
+            "id": "ejpasds0o8qyjs1n",
+            "type": "section",
+            "content": {
+                "title": "Import Data"
+            },
+            "isCodeManaged": false,
+            "position": 1,
+            "parentId": "c0f99a9e-5004-4e75-a6c6-36f17490b134",
+            "handlers": {},
+            "visible": {
+                "expression": true,
+                "binding": "",
+                "reversed": false
+            }
+        },
+        "b2si96eo1xvyn7gf": {
+            "id": "b2si96eo1xvyn7gf",
+            "type": "separator",
+            "content": {},
+            "isCodeManaged": false,
+            "position": 4,
+            "parentId": "c0f99a9e-5004-4e75-a6c6-36f17490b134",
+            "handlers": {}
+        },
+        "1tdbmm98hxevwqrn": {
+            "id": "1tdbmm98hxevwqrn",
+            "type": "fileinput",
+            "content": {
+                "label": "@{upload_msg}"
+            },
+            "isCodeManaged": false,
+            "position": 0,
+            "parentId": "ejpasds0o8qyjs1n",
+            "handlers": {
+                "wf-file-change": "handle_csv_upload"
+            },
+            "visible": {
+                "expression": "custom",
+                "binding": "file_uploaded",
+                "reversed": true
+            },
+            "binding": {
+                "eventType": "wf-file-change",
+                "stateRef": "stock_data"
+            }
+        },
+        "nwzxevcfn4eb9yrx": {
+            "id": "nwzxevcfn4eb9yrx",
+            "type": "section",
+            "content": {
+                "title": "Select a button to display the stock in a pandas dataframe:"
+            },
+            "isCodeManaged": false,
+            "position": 2,
+            "parentId": "c0f99a9e-5004-4e75-a6c6-36f17490b134",
+            "handlers": {}
+        },
+        "phnsn21i82l4ocp2": {
+            "id": "phnsn21i82l4ocp2",
+            "type": "section",
+            "content": {
+                "title": ""
+            },
+            "isCodeManaged": false,
+            "position": 3,
+            "parentId": "c0f99a9e-5004-4e75-a6c6-36f17490b134",
+            "handlers": {
+                "change": "generate_stock_analysis"
+            }
+        },
+        "iyigu781h4a1og3z": {
+            "id": "iyigu781h4a1og3z",
+            "type": "dataframe",
+            "content": {
+                "dataframe": "@{filtered_data}"
+            },
+            "isCodeManaged": false,
+            "position": 1,
+            "parentId": "nwzxevcfn4eb9yrx",
+            "handlers": {},
+            "visible": {
+                "expression": "custom",
+                "binding": "show_dataframe",
+                "reversed": false
+            }
+        },
+        "1ppihdq9w42ucbdq": {
+            "id": "1ppihdq9w42ucbdq",
+            "type": "plotlygraph",
+            "content": {
+                "spec": "@{line_chart}"
+            },
+            "isCodeManaged": false,
+            "position": 2,
+            "parentId": "nwzxevcfn4eb9yrx",
+            "handlers": {},
+            "visible": {
+                "expression": true,
+                "binding": "show_line_chart",
+                "reversed": false
+            }
+        },
+        "1z1siva5n8ql493j": {
+            "id": "1z1siva5n8ql493j",
+            "type": "text",
+            "content": {
+                "text": "@{analysis}\n",
+                "useMarkdown": "yes"
+            },
+            "isCodeManaged": false,
+            "position": 0,
+            "parentId": "phnsn21i82l4ocp2",
+            "handlers": {}
+        },
+        "5hwk9xv7pc6oxylq": {
+            "id": "5hwk9xv7pc6oxylq",
+            "type": "button",
+            "content": {
+                "text": "All Data"
+            },
+            "isCodeManaged": false,
+            "position": 0,
+            "parentId": "pgdatufvgxso527f",
+            "handlers": {
+                "wf-click": "handle_all_button_click"
+            }
+        },
+        "o0xh9of4bg5bdwf6": {
+            "id": "o0xh9of4bg5bdwf6",
+            "type": "columns",
+            "content": {},
+            "isCodeManaged": false,
+            "position": 0,
+            "parentId": "nwzxevcfn4eb9yrx",
+            "handlers": {}
+        },
+        "pgdatufvgxso527f": {
+            "id": "pgdatufvgxso527f",
+            "type": "column",
+            "content": {
+                "title": "",
+                "width": "1"
+            },
+            "isCodeManaged": false,
+            "position": 0,
+            "parentId": "o0xh9of4bg5bdwf6",
+            "handlers": {}
+        },
+        "vvu1ra2405ywqp12": {
+            "id": "vvu1ra2405ywqp12",
+            "type": "column",
+            "content": {
+                "title": "",
+                "width": "1"
+            },
+            "isCodeManaged": false,
+            "position": 1,
+            "parentId": "o0xh9of4bg5bdwf6",
+            "handlers": {}
+        },
+        "zvo73rjc2zo590e8": {
+            "id": "zvo73rjc2zo590e8",
+            "type": "button",
+            "content": {
+                "text": "Last 7 Days"
+            },
+            "isCodeManaged": false,
+            "position": 0,
+            "parentId": "vvu1ra2405ywqp12",
+            "handlers": {
+                "wf-click": "handle_last_seven_days_button_click"
+            }
+        },
+        "a4cxz6ygpoz7suzb": {
+            "id": "a4cxz6ygpoz7suzb",
+            "type": "text",
+            "content": {
+                "text": "@{upload_msg}",
+                "useMarkdown": "yes",
+                "alignment": "left",
+                "primaryTextColor": "#382fb6"
+            },
+            "isCodeManaged": false,
+            "position": 1,
+            "parentId": "ejpasds0o8qyjs1n",
+            "handlers": {},
+            "visible": {
+                "expression": "custom",
+                "binding": "show_msg",
+                "reversed": false
+            }
+        }
+    }
+}

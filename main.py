@@ -3,7 +3,6 @@ import pandas as pd
 import io
 import writer as wf
 import writer.ai
-import datetime
 import plotly.graph_objects as go
 import plotly.express as px
 from dotenv import load_dotenv
@@ -11,23 +10,12 @@ from dotenv import load_dotenv
 load_dotenv()
 writer.ai.init(os.getenv("WRITER_API_KEY"))
 
-# Refresh the window
-def _refresh_window(state):
-    state["show_line_chart"] = False
-    state["show_msg"] = False
-    state["message"] = "Writer AI insights will be generated here"
-    state["filtered_data"] = None  # Initialize filtered_data as None
-    state["stock_data"] = None     # Initialize stock_data as None
-    state["show_dataframe"] = False  # Hide dataframe initially
-    state["line_chart"] = None     # Initialize line_chart as None
-    state["file_uploaded"] = False  # Explicitly set file_uploaded to False
-
 def generate_stock_analysis(state):
     try:
         if state["stock_data"] is None:
             raise ValueError("No stock data available for analysis.")
+        # trying to deal with index column
         complete_stock_data = state["stock_data"].to_string(index=False)
-
         try:
             prompt = f"""  
             Variables: 
@@ -35,7 +23,7 @@ def generate_stock_analysis(state):
             
             Prompt:
             You will be acting as a stock market analyst. Review the provided IBM stock data and provide a concise analysis.
-            Keep your total response under 250 words.
+            Keep your total response under 600 words. You must be concise and to the point.
 
             <stock_data>
             {complete_stock_data}
@@ -52,7 +40,7 @@ def generate_stock_analysis(state):
             - Key observations (1-2 sentences)
 
             3. REQUIRED - Provide a title in bold and put content inside <recommendation> tags:
-            - Provide ONE clear buy/hold/sell recommendation with brief rationale
+            - Provide ONE clear buy/hold/sell recommendation with brief rationale (1 sentence).
             - Must start with "Recommendation: BUY/HOLD/SELL" followed by brief explanation
 
             4. Use the following delimiter \n to separate different sections.
@@ -61,7 +49,6 @@ def generate_stock_analysis(state):
             state this limitation in your response.
 
             """
-
         except Exception as e:
             raise ValueError("Failed to format prompt for AI model.")
         
@@ -73,10 +60,9 @@ def generate_stock_analysis(state):
                 "max_tokens": 250
             },
         )
-        
         state["analysis"] = submission.strip()
         return submission
-
+    
     except Exception as e:
         error_message = f"Error generating stock analysis: {str(e)}"
         print(error_message)
@@ -109,13 +95,13 @@ def handle_csv_upload(state, payload):
         state["show_msg"] = True
         state["upload_msg"] = f"File '{name}' uploaded and processed successfully!\n\nGive us a minute to analyze...BRB!"
         
-        # Before analysis message
+        # Message to print before analysis
         print(state["upload_msg"])
         
-        # Trigger analysis after upload
+        # Analyze after upload
         generate_stock_analysis(state)
         
-        # After analysis message
+        # Message to print after analysis
         state["upload_msg"] = "Writer has completed analysis."
         print(state["upload_msg"])
 
@@ -141,13 +127,12 @@ def update_line_chart(state):
         
         state["show_line_chart"] = True
         
-        # Create the line chart with only the necessary data
+        # Create the line chart 
         fig = px.line(
             plot_data, 
             x="Date",
             y="Close",
-            title="Stock Prices Over Time",
-            labels={"Date": "Date", "Close": "Close Price"}
+            title="Stock Prices Over Time"
         )
         
         # Update layout for better visualization
@@ -275,9 +260,6 @@ initial_state = wf.init_state(
         "analysis": "Writer will analyze and add response here.",
         "show_line_chart": False,
         "show_msg": False,
-        "msg": "",
+        "message": "Writer AI insights will be generated here"
     }
 )
-
-# Initialize the state
-_refresh_window(initial_state)
